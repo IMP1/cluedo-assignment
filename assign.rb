@@ -12,6 +12,8 @@ require 'net/smtp'
 EMAIL_ADDRESS = "58ridgeterrace@gmail.com"
 EMAIL_PASSWORD = File.read("email_password.txt").chomp
 
+TEST_EMAIL_ADDRESS = "huw_taylor@hotmail.co.uk" # TODO: Set this to nil once emails are working. 
+
 SMTP_SERVER_ADDRESS = "smtp.gmail.com"
 SMTP_SERVER_PORT = 587
 
@@ -113,9 +115,9 @@ def send_emails(assignments)
     email.start(SMTP_SERVER_ADDRESS, EMAIL_ADDRESS, EMAIL_PASSWORD, :login) do |smtp|
         assignments.each do |assignment|
             from = EMAIL_ADDRESS
-            # to = assignment[:email]
-            p assignment[:email]
-            to = 'huw_taylor@hotmail.co.uk' # TODO: When working, change for the line above 
+            to = assignment[:email]
+            p to
+            to = 'huw_taylor@hotmail.co.uk' unless TEST_EMAIL_ADDRESS.nil?
             message = MESSAGE_FORMAT % assignment
             smtp.send_message(message, from, to)
         end
