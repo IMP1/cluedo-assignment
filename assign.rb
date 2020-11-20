@@ -22,7 +22,7 @@ OBJECT_FILENAME = "objects.txt"
 MESSAGE_FORMAT = <<MESSAGE_END
 From: Ridge House <#{EMAIL_ADDRESS}>
 To: %<full_name>s <%<email>s>
-Subject: Ridge House Cluedo Instructions
+Subject: [For Your Eyes Only] Ridge House Cluedo Instructions
 
 Dear %<name>s,
 
@@ -30,6 +30,19 @@ You have to kill %<target>s.
 To do this they must hold a %<object>s %<location>s.
 
 Good luck.
+
+
+======== Rules ========
+
+To kill someone you must witness them holding the required object in the necessary place and declare that they are now dead.
+Once you kill your target, you then take on their misson.
+You cannot force the object onto your target. 
+Your target does not have to have taken the object from you, specifically, to be killed.
+If you end up with yourself as your target then you have won!
+You don't have to work alone, but be careful who you trust.
+
+=======================
+
 MESSAGE_END
 
 # TODO: Add more objects
@@ -97,20 +110,16 @@ end
 def send_emails(assignments)
     email = Net::SMTP.new(SMTP_SERVER_ADDRESS, SMTP_SERVER_PORT)
     email.enable_starttls
-    p EMAIL_ADDRESS
-    p EMAIL_PASSWORD
-    # email.starttls
     email.start(SMTP_SERVER_ADDRESS, EMAIL_ADDRESS, EMAIL_PASSWORD, :login) do |smtp|
         assignments.each do |assignment|
             from = EMAIL_ADDRESS
-            # to = person[:contact]
+            # to = assignment[:email]
+            p assignment[:email]
             to = 'huw_taylor@hotmail.co.uk' # TODO: When working, change for the line above 
             message = MESSAGE_FORMAT % assignment
             smtp.send_message(message, from, to)
-            break
         end
     end
-    exit(0)    
 end
 
 assign_assignments
