@@ -31,6 +31,7 @@ Good luck.
 MESSAGE_END
 
 # TODO: Add more objects
+# TODO: Create a README with instructions (including having a `email_password.txt` file with the SMTP password stuff if necessary)
 
 def load_people
     people = []
