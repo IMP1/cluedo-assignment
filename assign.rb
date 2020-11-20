@@ -12,6 +12,8 @@ require 'net/smtp'
 EMAIL_ADDRESS = "58ridgeterrace@gmail.com"
 EMAIL_PASSWORD = File.read("email_password.txt").chomp
 
+SMTP_SERVER_ADDRESS = "smtp.gmail.com"
+SMTP_SERVER_PORT = 587
 
 PEOPLE_FILENAME = "people.txt"
 LOCATION_FILENAME = "locations.txt"
@@ -93,18 +95,18 @@ def assign_assignments
 end
 
 def send_emails(assignments)
-    email = Net::SMTP.new('smtp.gmail.com', 587)
+    email = Net::SMTP.new(SMTP_SERVER_ADDRESS, SMTP_SERVER_PORT)
     email.enable_starttls
     p EMAIL_ADDRESS
     p EMAIL_PASSWORD
-    email.start('smtp.gmail.com', EMAIL_ADDRESS, EMAIL_PASSWORD, :login) do |smtp|
-        smtp.starttls
+    # email.starttls
+    email.start(SMTP_SERVER_ADDRESS, EMAIL_ADDRESS, EMAIL_PASSWORD, :login) do |smtp|
         assignments.each do |assignment|
             from = EMAIL_ADDRESS
             # to = person[:contact]
             to = 'huw_taylor@hotmail.co.uk' # TODO: When working, change for the line above 
             message = MESSAGE_FORMAT % assignment
-            # smtp.send_message(message, from, to)
+            smtp.send_message(message, from, to)
             break
         end
     end
