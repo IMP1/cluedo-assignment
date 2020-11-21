@@ -29,7 +29,7 @@ Subject: [For Your Eyes Only] Ridge House Cluedo Instructions
 Dear %<name>s,
 
 You have to kill %<target>s.
-To do this they must hold a %<object>s %<location>s.
+To do this %<method>s.
 
 Good luck.
 
@@ -48,6 +48,7 @@ You don't have to work alone, but be careful who you trust.
 MESSAGE_END
 
 # TODO: Add more objects
+# TODO: Get more locations and objects from the house (and have them see the lists)
 # TODO: Create a README with instructions (including having a `email_password.txt` file with the SMTP password stuff if necessary)
 
 def load_people
@@ -56,7 +57,7 @@ def load_people
         f.each_line do |line|
             name, contact = *line.scan(/"(.+?)\s+<(.*?)>"/).first
             people.push({
-                name: name.split(/\s/).first,
+                name: name.split(/\s/).first, # ASSUMPTION: People's first names are their casual use-names
                 full_name: name,
                 contact: contact,
             })
@@ -85,23 +86,26 @@ def load_objects
     return objects
 end
 
-def load_objectives
-    locations = load_locations
-    objects = load_objects
-    return locations.shuffle.zip(objects.shuffle.cycle).map { |location, object| { location: location, object: object} }
+def load_objectives(include_locations=true)
+    if include_locations
+        locations = load_locations
+        objects = load_objects
+        return locations.shuffle.zip(objects.shuffle.cycle).map { |location, object| "they must hold #{object} #{location}" }
+    else
+        return load_methods
+    end
 end
 
-def assign_assignments
+def assign_assignments(include_locations=true)
     people = load_people.shuffle
-    objectives = load_objectives#.shuffle
+    objectives = load_objectives(include_locations)
     assignments = people.map.with_index do |person, i|
         target = people[(i + 1) % people.size]
         mission = objectives.shift
         { 
             name: person[:name], 
             target: target[:name], 
-            object: mission[:object],
-            location: mission[:location],
+            method: mission,
             email: person[:contact],
             full_name: person[:full_name],
         }
@@ -116,7 +120,6 @@ def send_emails(assignments)
         assignments.each do |assignment|
             from = EMAIL_ADDRESS
             to = assignment[:email]
-            p to
             to = 'huw_taylor@hotmail.co.uk' unless TEST_EMAIL_ADDRESS.nil?
             message = MESSAGE_FORMAT % assignment
             smtp.send_message(message, from, to)
