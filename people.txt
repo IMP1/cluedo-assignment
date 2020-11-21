@@ -1,6 +1,6 @@
 "Diana Ivanova <d.ivanova@leeds.ac.uk>"
 "Elena Hofferberth <bneh@leeds.ac.uk>"
-"Georgie Buchanan <georgiebuchanan@gmail.com>"
+Georgie Buchanan <georgiebuchanan@gmail.com>
 "Huw Taylor <huw_taylor@hotmail.co.uk>"
 "Jodie Posen <jodie.posen@gmail.com>"
 "Joel Millward-Hopkins <joeltmh@gmail.com>"
