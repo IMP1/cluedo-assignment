@@ -1,12 +1,5 @@
 # Camp Cluedo Randomiser
 
-=begin
-
-    # TODO: Add description and usage
-    This program ensures that no small loops occur.
-
-=end
-
 require 'net/smtp'
 
 EMAIL_ADDRESS = "58ridgeterrace@gmail.com"
@@ -20,6 +13,7 @@ SMTP_SERVER_PORT = 587
 PEOPLE_FILENAME = "people.txt"
 LOCATION_FILENAME = "locations.txt"
 OBJECT_FILENAME = "objects.txt"
+METHOD_FILENAME = "methods.txt"
 
 MESSAGE_FORMAT = <<MESSAGE_END
 From: Ridge House <#{EMAIL_ADDRESS}>
@@ -84,6 +78,16 @@ def load_objects
         end
     end
     return objects
+end
+
+def load_methods
+    methods = []
+    File.open(METHOD_FILENAME, 'r') do |f|
+        f.each_line do |line|
+            methods.push(line.chomp)
+        end
+    end
+    return methods
 end
 
 def load_objectives(include_locations=true)
