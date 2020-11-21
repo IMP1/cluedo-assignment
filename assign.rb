@@ -2,20 +2,30 @@
 
 require 'net/smtp'
 
+#=====================#
+# CUSTOMISATION BEGIN #
+#=====================#
+
+# Who you want the email to be send from
 SENDER_NAME = "Ridge House"
 EMAIL_ADDRESS = "58ridgeterrace@gmail.com"
-EMAIL_PASSWORD = File.read("email_password.txt").chomp
 EMAIL_SUBJECT = "[For Your Eyes Only] Ridge House Cluedo Instructions"
 
-TEST_EMAIL_ADDRESS = "huw_taylor@hotmail.co.uk" # TODO: Set this to nil once emails are working. 
+# This is used to test the email service. When it is nil, emails will be sent out to all participants
+TEST_EMAIL_ADDRESS = "huw_taylor@hotmail.co.uk"
 
+# These are the SMTP server details. This will depend on who you are sending the email from.
 SMTP_SERVER_ADDRESS = "smtp.gmail.com"
 SMTP_SERVER_PORT = 587
 
-PEOPLE_FILENAME = "people.txt"
-LOCATION_FILENAME = "locations.txt"
-OBJECT_FILENAME = "objects.txt"
-METHOD_FILENAME = "methods.txt"
+# This is the format of the message. You can use the following special texts
+#   * %<name>s       : The first name of the recipient of the email.
+#   * %<email>s      : The email address of the recipient.
+#   * %<full_name>s  : The full name of the recipient.
+#   * %<target>s     : The person who is to be killed by the recipient.
+#   * %<method>s     : The method by which the recipient is to kill.
+# They will be replaced in the email automatically with the correct value.
+# The first few lines of the email are necessary in their formatting, but the body of the email is up to you.
 
 MESSAGE_FORMAT = <<MESSAGE_END
 From: #{SENDER_NAME} <#{EMAIL_ADDRESS}>
@@ -43,9 +53,16 @@ You don't have to work alone, but be careful who you trust.
 
 MESSAGE_END
 
-# TODO: Add more objects
-# TODO: Get more locations and objects from the house (and have them see the lists)
-# TODO: Create a README with instructions (including having a `email_password.txt` file with the SMTP password stuff if necessary)
+#===================#
+# CUSTOMISATION END #
+#===================#
+
+PEOPLE_FILENAME = "people.txt"
+LOCATION_FILENAME = "locations.txt"
+OBJECT_FILENAME = "objects.txt"
+METHOD_FILENAME = "methods.txt"
+
+EMAIL_PASSWORD = File.read("email_password.txt").chomp
 
 def load_people
     people = []
@@ -126,7 +143,7 @@ def send_emails(assignments)
         assignments.each do |assignment|
             from = EMAIL_ADDRESS
             to = assignment[:email]
-            to = 'huw_taylor@hotmail.co.uk' unless TEST_EMAIL_ADDRESS.nil?
+            to = TEST_EMAIL_ADDRESS unless TEST_EMAIL_ADDRESS.nil?
             message = MESSAGE_FORMAT % assignment
             smtp.send_message(message, from, to)
         end

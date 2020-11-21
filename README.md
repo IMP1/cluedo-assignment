@@ -40,6 +40,8 @@ You can add your own objects in the `objects.txt` file. It assumes that each obj
 
 You can also add you own methods, and use those. You can add the methods to the `methods.txt` file. It assumes each method will be on its own line. To have the assignment use the methods instead of locations and objects, change the final line of `assign.rb` from `assign_assignments`, to `assign_assignments(false)`.
 
+**Important**: To send out the emails, you must create a file called `email_password.txt` which contains the password for your email SMTP server. It is not saved to the repository because having passwords publically is a bad idea.
+
 To test the assignment and make sure that the emailing is working correctly, you can test it by changing the line containging `TEST_EMAIL_ADDRESS = nil` to `TEST_EMAIL_ADDRESS = "your@email.address"` (NB. Make sure the email address is in speech marks (`"`)).
 
 To run the assignment, and email out the instructions to people, set the TEST_EMAIL_ADDRESS back to `nil`, and run the `assign.rb` file.
