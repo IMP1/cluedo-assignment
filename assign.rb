@@ -2,8 +2,10 @@
 
 require 'net/smtp'
 
+SENDER_NAME = "Ridge House"
 EMAIL_ADDRESS = "58ridgeterrace@gmail.com"
 EMAIL_PASSWORD = File.read("email_password.txt").chomp
+EMAIL_SUBJECT = "[For Your Eyes Only] Ridge House Cluedo Instructions"
 
 TEST_EMAIL_ADDRESS = "huw_taylor@hotmail.co.uk" # TODO: Set this to nil once emails are working. 
 
@@ -16,9 +18,9 @@ OBJECT_FILENAME = "objects.txt"
 METHOD_FILENAME = "methods.txt"
 
 MESSAGE_FORMAT = <<MESSAGE_END
-From: Ridge House <#{EMAIL_ADDRESS}>
+From: #{SENDER_NAME} <#{EMAIL_ADDRESS}>
 To: %<full_name>s <%<email>s>
-Subject: [For Your Eyes Only] Ridge House Cluedo Instructions
+Subject: #{EMAIL_SUBJECT}
 
 Dear %<name>s,
 
@@ -49,7 +51,7 @@ def load_people
     people = []
     File.open(PEOPLE_FILENAME, 'r') do |f|
         f.each_line do |line|
-            name, contact = *line.scan(/"(.+?)\s+<(.*?)>"/).first
+            _, name, contact = *line.scan(/("?)(.+?)\s+<(.*?)>\1/).first
             people.push({
                 name: name.split(/\s/).first, # ASSUMPTION: People's first names are their casual use-names
                 full_name: name,
