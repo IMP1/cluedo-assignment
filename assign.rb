@@ -34,6 +34,9 @@ Subject: #{EMAIL_SUBJECT}
 
 Dear %<name>s,
 
+The Ridgemas Cluedo is about to begin.
+The game starts at noon today (Thursday).
+
 You have to kill %<target>s.
 To do this %<method>s.
 
@@ -115,7 +118,7 @@ def load_objectives(include_locations=true)
         objects = load_objects
         return locations.shuffle.zip(objects.shuffle.cycle).map { |location, object| "they must hold #{object} #{location}" }
     else
-        return load_methods
+        return load_methods.shuffle
     end
 end
 
