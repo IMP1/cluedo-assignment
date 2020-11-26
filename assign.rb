@@ -12,7 +12,7 @@ EMAIL_ADDRESS = "58ridgeterrace@gmail.com"
 EMAIL_SUBJECT = "[For Your Eyes Only] Ridge House Cluedo Instructions"
 
 # This is used to test the email service. When it is nil, emails will be sent out to all participants
-TEST_EMAIL_ADDRESS = "huw_taylor@hotmail.co.uk"
+TEST_EMAIL_ADDRESS = nil
 
 # These are the SMTP server details. This will depend on who you are sending the email from.
 SMTP_SERVER_ADDRESS = "smtp.gmail.com"
