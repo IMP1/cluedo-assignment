@@ -116,27 +116,12 @@ def load_objectives(include_locations=true)
     if include_locations
         locations = load_locations
         objects = load_objects
-        return locations.shuffle.zip(objects.shuffle.cycle).map { |location, object| "they must hold #{object} #{location}" }
+        return locations.shuffle.zip(objects.shuffle)
+                                .select { |location, object| !location.nil? && !object.nil? }
+                                .map { |location, object| "they must hold #{object} #{location}" }
     else
-        return load_methods.shuffle
+        return load_methods
     end
-end
-
-def assign_assignments(include_locations=true)
-    people = load_people.shuffle
-    objectives = load_objectives(include_locations)
-    assignments = people.map.with_index do |person, i|
-        target = people[(i + 1) % people.size]
-        mission = objectives.shift
-        { 
-            name: person[:name], 
-            target: target[:name], 
-            method: mission,
-            email: person[:contact],
-            full_name: person[:full_name],
-        }
-    end
-    send_emails(assignments)
 end
 
 def send_emails(assignments)
@@ -151,6 +136,28 @@ def send_emails(assignments)
             smtp.send_message(message, from, to)
         end
     end
+end
+
+def assign_assignments(include_locations=true)
+    $stdout.sync = true
+    puts "Loading data"
+    people = load_people.shuffle
+    objectives = load_objectives(include_locations).shuffle
+    puts "Assigning missions"
+    assignments = people.map.with_index do |person, i|
+        target = people[(i + 1) % people.size]
+        mission = objectives.shift
+        { 
+            name: person[:name], 
+            target: target[:name], 
+            method: mission,
+            email: person[:contact],
+            full_name: person[:full_name],
+        }
+    end
+    puts "Sending emails" + (TEST_EMAIL_ADDRESS.nil? ? "" : " to test email address.")
+    send_emails(assignments)
+    puts "Complete."
 end
 
 assign_assignments
